@@ -6,4 +6,5 @@ langchain_groq
 langchain-text-splitters
 langchain-openai
 python-dotenv
+faiss-cpu
 pypdf
