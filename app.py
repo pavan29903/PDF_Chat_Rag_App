@@ -6,13 +6,13 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_chroma import Chroma
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_community.vectorstores import FAISS
 
 
 load_dotenv()
@@ -24,15 +24,11 @@ TEMP_PDF_DIR = "temp_uploaded_pdfs"
 os.makedirs(TEMP_PDF_DIR, exist_ok=True) 
 
 
+
 @st.cache_resource
 def get_vectorstore_from_pdfs(file_paths):
-    """
-    Loads multiple PDFs, splits them into chunks, and creates a Chroma vector store.
-    This function is cached to avoid re-processing PDFs on every rerun.
-    """
     if not file_paths:
         return None
-
     all_documents = []
     with st.spinner("Processing PDF(s) and creating knowledge base... This might take a moment."):
         for file_path in file_paths:
@@ -53,10 +49,11 @@ def get_vectorstore_from_pdfs(file_paths):
         splits = text_splitter.split_documents(all_documents)
 
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-        client = chromadb.Client()
-        vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings, client=client, collection_name="pdf_rag_collection")
+        
+        vectorstore = FAISS.from_documents(splits, embeddings)
         st.success("Knowledge base created successfully from uploaded PDF(s)! You can now ask questions.")
         return vectorstore
+
 
 def get_chat_history(session_id: str) -> BaseChatMessageHistory:
     """
