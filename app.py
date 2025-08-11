@@ -1,7 +1,6 @@
 import streamlit as st
 from dotenv import load_dotenv
 import os
-import chromadb
 from langchain_openai import OpenAIEmbeddings
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFLoader
