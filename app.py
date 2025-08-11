@@ -1,6 +1,7 @@
 import streamlit as st
 from dotenv import load_dotenv
 import os
+import chromadb
 from langchain_openai import OpenAIEmbeddings
 from langchain_groq import ChatGroq
 from langchain_community.document_loaders import PyPDFLoader
@@ -52,6 +53,7 @@ def get_vectorstore_from_pdfs(file_paths):
         splits = text_splitter.split_documents(all_documents)
 
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        client = chromadb.Client()
         vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
         st.success("Knowledge base created successfully from uploaded PDF(s)! You can now ask questions.")
         return vectorstore
