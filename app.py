@@ -54,7 +54,7 @@ def get_vectorstore_from_pdfs(file_paths):
 
         embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         client = chromadb.Client()
-        vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+        vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings, client=client, collection_name="pdf_rag_collection")
         st.success("Knowledge base created successfully from uploaded PDF(s)! You can now ask questions.")
         return vectorstore
 
