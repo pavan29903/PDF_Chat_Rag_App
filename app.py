@@ -86,9 +86,9 @@ def setup_rag_chain(retriever):
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_prompt)
 
     qa_system_prompt = (
-        "You are a helpful AI assistant. Your task is to answer questions based solely on the provided context. "
-        "Keep your answers concise and directly relevant to the question. "
-        "if the answer is not in the provided context then just say \"the answer is not in the context provided\", don't provide the wrong answer or other information."
+        "You are a helpful AI assistant.Your task is to answer questions based on the provided context only. "
+        "Keep your answers concise, detailed and directly relevant to the question. "
+        "if the answer is not in the provided context then just say \"the answer is not in the context provided please ask relevant questions\", don't provide the wrong answer or other information."
         "Do not make up information or provide answers from outside the given documents."
         "\n\nContext: {context}"
     )
